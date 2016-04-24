@@ -1,0 +1,158 @@
+html {
+    font-size: 62.5%;
+}
+
+html, body, .container{
+    
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.container #row {
+    align-self: flex-end;
+}
+
+#row #contact {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #000000;
+}
+
+#row1 {
+    margin-bottom: 20px;
+}
+
+#row1 h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    width: 100%;
+    font-size: 5rem;
+    background: linear-gradient(269deg, #c0c0c0, #505050);
+    background: -moz-linear-gradient(#ffffff, #ffffff);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    -webkit-animation: gradientAnimation 12s ease infinite;
+    -moz-animation: gradientAnimation 12s ease infinite;
+    -o-animation: gradientAnimation 12s ease infinite;
+    animation: gradientAnimation 12s ease infinite;
+}
+
+@-webkit-keyframes gradientAnimation {
+    0%{background-position:0% 51%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 51%}
+}
+@-moz-keyframes gradientAnimation {
+    0%{background-position:0% 51%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 51%}
+}
+@-o-keyframes gradientAnimation {
+    0%{background-position:0% 51%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 51%}
+}
+@keyframes gradientAnimation { 
+    0%{background-position:0% 51%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 51%}
+}
+
+#row2 {
+    margin-bottom: 50px;
+}
+
+#row2 #calc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#row2 #calc #focusedInput {
+    width: 260px;
+}
+
+#row2 #calc #red {
+    width: 80px;
+    margin-top: 20px;
+}
+
+.form-control {
+    border-color: #3399CC;
+}
+
+#row2 #calc #row3 {
+    width: 100%;
+    position: absolute; 
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-flow: wrap row;
+    justify-content: space-around;
+    background-color: #c0c0c0;
+    padding: 15px 0;
+}
+
+#row2 #calc #row3 .date,
+#row2 #calc #row3 .course {
+    display: flex;
+    flex-flow: nowrap row;
+    justify-content: space-between;
+}
+
+#row2 #calc #row3 select {
+    width: 100px;
+}
+
+#row2 #calc #row3 #month {
+    width: 125px;
+}
+
+#row2 #calc #row3 #day {
+    width: 70px;
+}
+
+#row2 #calc #row3 button {
+    padding: 0;
+    width: 50px;
+}
+
+@media(min-width: 700px) {
+    #row1 h1 {
+        top: 15%;
+        font-size: 6rem;
+    }
+    #row #contact {
+        right: 70px;
+    }
+}
+
+@media(min-height: 450px) {
+    html, body, .container{
+        height: 100%;
+    }
+}
+
+@media(min-width: 1200px) {
+    #row #contact {
+        right: 15px;
+    }
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+input[type=number] {-moz-appearance: textfield;}

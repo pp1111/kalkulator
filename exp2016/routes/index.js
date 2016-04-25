@@ -59,8 +59,7 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\w+)\-(\w+)\-
   var date = new Date(20+req.params[0],req.params[1]-1,req.params[2],0,0,0);
 
   console.log("\nWybrana data: ", date);
-  console.log("getDay: ", date.getDay());
-
+  
   console.log("Pobrane parametry: \n", req.params);
 
   if(req.params[0] == 16){

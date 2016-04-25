@@ -13,7 +13,6 @@ var currentYear = now.getFullYear();
 var currentMonth = now.getMonth() +1;
 var currentDay = now.getDate();
 var currentHour = now.getHours();
-var isWeek = now.getDay();
 
 router.get('/', function (req, res) {
 
@@ -57,8 +56,12 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\w+)\-(\w+)\-
   var url = "";
   var temp1 = req.params[1];
   var temp2 = req.params[2];
+  var date = new Date(20+req.params[0],req.params[1]-1,req.params[2],0,0,0);
 
-  console.log("\nPobrane parametry: \n", req.params);
+  console.log("\nWybrana data: ", date);
+  console.log("getDay: ", date.getDay());
+
+  console.log("Pobrane parametry: \n", req.params);
 
   if(req.params[0] == 16){
     url = "http://www.nbp.pl/kursy/xml/dir.txt";
@@ -96,8 +99,8 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\w+)\-(\w+)\-
           else{
             console.log("\nWyszukana data: ", newUrl);
           }
-
-          if((req.params[2] == currentDay && currentHour<12) || isWeek == 6 || isWeek == 0) {
+          
+          if((req.params[2] == currentDay && currentHour<12) || date.getDay() == 6 || date.getDay() == 0) {
             console.log("Przypadek dzisiejszego dnia");
             while(newUrl.length !=11 && licznik < 100){
                   search--;
@@ -126,6 +129,13 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\w+)\-(\w+)\-
               temp1 = '0' + temp1;
               temp2 = temp2 - 100;
               temp2 = '0' + temp2;
+            }
+
+            if(temp2<=-70){
+              temp1--;
+              temp1 = '0' + temp1;
+              temp2 = temp2 + 100;
+              temp2 = temp2;
             }
 
   
@@ -389,7 +399,11 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
   var temp1 = req.params[1];
   var temp2 = req.params[2];
 
-  console.log("\nPobrane parametry: \n", req.params);
+  var date = new Date(20+req.params[0],req.params[1]-1,req.params[2],0,0,0);
+
+  console.log("\nPobrana data: ", date);
+
+  console.log("Pobrane parametry: \n", req.params);
 
   if(req.params[0] == 16){
     url = "http://www.nbp.pl/kursy/xml/dir.txt";
@@ -428,7 +442,7 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
             console.log("\nWyszukana data: ", newUrl);
           }
 
-          if((req.params[2] == currentDay && currentHour<12) || isWeek == 6 || isWeek == 0){
+          if((req.params[2] == currentDay && currentHour<12) || date.getDay() == 6 || date.getDay() == 0){
             console.log("Przypadek dzisiejszego dnia");
             while(newUrl.length !=11 && licznik < 100){
                   search--;
@@ -456,6 +470,13 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
               temp1++;
               temp1 = '0' + temp1;
               temp2 = temp2 - 100;
+              temp2 = '0' + temp2;
+            }
+
+            if(temp2<=-70){
+              temp1--;
+              tem1 = '0' + temp1;
+              temp2 = temp2+100;
               temp2 = '0' + temp2;
             }
 

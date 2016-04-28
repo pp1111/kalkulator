@@ -200,7 +200,12 @@ footer a {
 textarea{
     resize: none;
 }
-
+#resultarea{
+    background-color: rgb(238, 238, 238);
+}
+a{
+    color: #808080;
+}
 @media(min-height: 650px) {
     html, body {
         height: 100%;

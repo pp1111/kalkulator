@@ -14,6 +14,19 @@ var currentMonth = now.getMonth() +1;
 var currentDay = now.getDate();
 var currentHour = now.getHours();
 
+function rand( min, max ){
+    min = parseInt( min, 10 );
+    max = parseInt( max, 10 );
+
+    if ( min > max ){
+        var tmp = min;
+        min = max;
+        max = tmp;
+    }
+
+    return Math.floor( Math.random() * ( max - min + 1 ) + min );
+}
+
 router.get('/', function (req, res) {
 
     var request = http.get("http://www.nbp.pl/kursy/xml/a025z100205.xml", function(response) { 
@@ -57,6 +70,7 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
   var temp1 = req.params[1];
   var temp2 = req.params[2];
   var date = new Date(20+req.params[0],req.params[1]-1,req.params[2],0,0,0);
+  var entryTab = [];
 
   console.log("\nWybrana data: ", date);
   
@@ -172,7 +186,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                   result: "Brak aktualizacji nbp z danego dnia, aktualizacje dokonywane są w dni robocze ok. godziny 12",
                                   result1: "show",
                                   result2: "hidden",
-                                  contact: "hidden"
+                                  contact: "hidden",
+                                  draw1 : "",
+                                  draw2 : ""
                             });    
                        });
                   });
@@ -191,6 +207,15 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                   response.on('end', function() {
 
                         parseString(xml, function (err, result) {
+
+                          result.tabela_kursow.pozycja.forEach(function(entry){
+                              entryTab.push(entry.kod_waluty[0]);
+                          });
+
+
+                          draw1 = entryTab[rand(0,34)];
+                          draw2 = entryTab[rand(0,34)];
+
                             if(step1 == "PLN"){
                                  step1 = step3 * pln;
                                  console.log("\nKrok1 = ilosc * waluta: ", step1, step3, pln);
@@ -201,7 +226,7 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                     step1 = step3 * entry.kurs_sredni[0].replace(",",".");
                                     console.log("\nKrok1 = ilosc * waluta: ", step1, step3, entry.kod_waluty[0]);
                                     }   
-                                }) 
+                                });
                             }
 
                             if(step2 == "PLN"){
@@ -227,7 +252,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                                 result: req.params[5] + req.params[3] + " to " + kurs + req.params[4],
                                                 result1: "show",
                                                 result2: "show",
-                                                contact: "hidden"
+                                                contact: "hidden",
+                                                draw1 : draw1,
+                                                draw2 : draw2
                                             });
                             } else {
                                   result.tabela_kursow.pozycja.forEach(function(entry) {
@@ -254,7 +281,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                                 result: req.params[5] + req.params[3] + " to " + kurs + req.params[4],
                                                 result1: "show",
                                                 result2: "show",
-                                                contact: "hidden"  
+                                                contact: "hidden",
+                                                draw1 : draw1,
+                                                draw2 : draw2
                                             });
                                       }
                                   }) 
@@ -374,7 +403,7 @@ router.post('/contact', function (req, res) {
                       resultmonth: "",
                       result1: "hidden",
                       result2: "hidden",
-                      contact: "contactResult"  
+                      contact: "contactResult",
                     });
                });
           });
@@ -514,7 +543,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                   result: "Brak aktualizacji nbp z danego dnia, aktualizacje dokonywane są w dni robocze ok. godziny 12",
                                   result1: "show",
                                   result2: "hidden",
-                                  contact: "hidden"
+                                  contact: "hidden",
+                                  draw1 : "",
+                                  draw2 : ""
                             });    
                        });
                   });
@@ -569,7 +600,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                                 result: result_text + '\n\n'+ 1 + req.params[3] + " to " + kurs + req.params[4],
                                                 result1: "show",
                                                 result2: "show",
-                                                contact: "hidden"
+                                                contact: "hidden",
+                                                draw1 : "",
+                                                draw2 : ""
                                             });
                             } else {
                                   result.tabela_kursow.pozycja.forEach(function(entry) {
@@ -596,7 +629,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                                 result: result_text + '\n\n'+ 1 + req.params[3] + " to " + kurs + req.params[4],
                                                 result1: "show",
                                                 result2: "show",
-                                                contact: "hidden"  
+                                                contact: "hidden" ,
+                                                draw1 : "",
+                                                draw2 : ""
                                             });
                                       }
                                   }) 

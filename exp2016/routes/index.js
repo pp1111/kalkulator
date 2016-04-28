@@ -426,7 +426,7 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
   var url = "";
   var temp1 = req.params[1];
   var temp2 = req.params[2];
-
+  var entryTab = [];
   var date = new Date(20+req.params[0],req.params[1]-1,req.params[2],0,0,0);
 
   console.log("\nPobrana data: ", date);
@@ -564,6 +564,15 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                   response.on('end', function() {
 
                         parseString(xml, function (err, result) {
+
+                        result.tabela_kursow.pozycja.forEach(function(entry){
+                              entryTab.push(entry.kod_waluty[0]);
+                        });
+
+
+                          draw1 = entryTab[rand(0,34)];
+                          draw2 = entryTab[rand(0,34)];
+
                             if(step1 == "PLN"){
                                  step1 = step3 * pln;
                                  console.log("\nKrok1 = ilosc * waluta: ", step1, step3, pln);
@@ -601,8 +610,8 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                                 result1: "show",
                                                 result2: "show",
                                                 contact: "hidden",
-                                                draw1 : "",
-                                                draw2 : ""
+                                                draw1 : draw1,
+                                                draw2 : draw2
                                             });
                             } else {
                                   result.tabela_kursow.pozycja.forEach(function(entry) {
@@ -630,8 +639,8 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                                 result1: "show",
                                                 result2: "show",
                                                 contact: "hidden" ,
-                                                draw1 : "",
-                                                draw2 : ""
+                                                draw1 : draw1,
+                                                draw2 : draw2
                                             });
                                       }
                                   }) 

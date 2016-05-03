@@ -1,4 +1,5 @@
 		<select class="form-control" name="year" id="year">
+			<option value=''>Wybierz</option>
 				<%for(var i=16; i>4; i--){ %>
 					<%if(i>=10) { %>
 					  	<% if(i==year) { %>
@@ -17,6 +18,7 @@
 		</select>
 				
 		<select class="form-control" name="month" id="month">
+			<option value=''>Wybierz</option>
 			<% var months = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień']; %>
 			<%for(var i=1; i<=12; i++) { %>	
 				<%if(i<10) { %>
@@ -36,7 +38,7 @@
 		</select>
 
 		<select class="form-control" name="day" id="day">
-
+			<option value=''>Wybierz</option>
 			<%for(var i=1; i<=31; i++) { %>
 				<%if(i<10){%>
 					<%if(i==day){ %>

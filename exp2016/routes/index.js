@@ -43,7 +43,7 @@ router.get('/', function (req, res) {
                     title: "AMoney Nowe Oblicze Finansów",
                     description: "AMoney to zaawansowany kalkulator finansowy, który opiera się na danych Narodowego Banku Polskiego. Sprawdź co oferuje.",
                     amount: "",
-                    year: currentYear, 
+                    year: currentYear-2000, 
                     month: currentMonth,
                     day: currentDay,
                     cash: result.tabela_kursow.pozycja,
@@ -113,43 +113,46 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
             console.log("\nWyszukana data: ", newUrl);
           }
           
-          if((req.params[2] == currentDay && currentHour<12) || date.getDay() == 6 || date.getDay() == 0) {
-            console.log("Przypadek dzisiejszego dnia");
-            while(newUrl.length !=11 && licznik < 100){
-                  search--;
-                  temp2--;   
-                  licznik++;
-                  console.log("szukamy...",search);     
-                  newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
-            }
+          if(req.params[1] == 1 && (req.params[2] == 1 || req.params[2] == 2 || req.params[2] == 3)){
+              while(newUrl.length !=11 && licznik < 100){
+                    search++;
+                    temp2++;   
+                    licznik++;
+                    console.log("szukamy...",search);     
+                    newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
+              }
+          } else {
+              while(newUrl.length !=11 && licznik < 100){
+                    search--;
+                    temp2--;   
+                    licznik++;
+                    console.log("szukamy...",search);     
+                    newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
+              }
           }
-          else{
-            while(newUrl.length !=11 && licznik < 100){
-                  search++;
-                  temp2++;   
-                  licznik++;
-                  console.log("szukamy...",search);     
-                  newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
-            }
-          }
+
             if(!rx.test(newUrl)){ 
                   newUrl = "a" + newUrl.substring(0,10); 
                   console.log(newUrl); 
             }
 
-            if(temp2>=100){
+         if(temp2>=100){
               temp1++;
-              temp1 = '0' + temp1;
               temp2 = temp2 - 100;
-              temp2 = '0' + temp2;
             }
 
-            if(temp2<=-70){
+          if(temp2<=-70){
               temp1--;
-              temp1 = '0' + temp1;
-              temp2 = temp2 + 100;
-              temp2 = temp2;
+              temp2 = temp2+100;
             }
+
+          if(temp1.toString().length < 2){
+            temp1 = '0' + temp1;
+          }
+
+          if(temp2.toString().length < 2){
+            temp2 = '0' + temp2;
+          }
 
   
           console.log("\nWyszukana data: ",newUrl);
@@ -166,8 +169,16 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                    });
 
                   response.on('end', function() {
+
                        parseString(xml, function (err, result) {
                                   
+                         result.tabela_kursow.pozycja.forEach(function(entry){
+                              entryTab.push(entry.kod_waluty[0]);
+                          }); 
+
+                          draw1 = entryTab[rand(0,34)];
+                          draw2 = entryTab[rand(0,34)];
+
                             res.render('index', { 
                                   title: title,
                                   description: description,
@@ -183,12 +194,17 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                   resultmonth: "",
                                   wynik:"",
                                   date: "",
+                                  result_text: '',
                                   result: "Brak aktualizacji nbp z danego dnia, aktualizacje dokonywane są w dni robocze ok. godziny 12",
                                   result1: "show",
                                   result2: "hidden",
                                   contact: "hidden",
-                                  draw1 : "",
-                                  draw2 : ""
+                                  draw1 : draw1,
+                                  draw2 : draw2,
+                                  rand_amount : rand(10,50),
+                                  rand_year : rand(10,16),
+                                  rand_month : rand(1,12),
+                                  rand_day : rand(1,30)
                             });    
                        });
                   });
@@ -249,12 +265,17 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                                 resultmonth: temp1,
                                                 wynik: "Przelicznik" + " " + req.params[3] + " na " + req.params[4],
                                                 date: "Kurs nbp z dnia: " + req.params[0] + "-" + temp1 + "-" + temp2,
+                                                result_text: '',
                                                 result: req.params[5] + req.params[3] + " to " + kurs + req.params[4],
                                                 result1: "show",
                                                 result2: "show",
                                                 contact: "hidden",
                                                 draw1 : draw1,
-                                                draw2 : draw2
+                                                draw2 : draw2,
+                                                rand_amount : rand(10,50),
+                                                rand_year : rand(10,16),
+                                                rand_month : rand(1,12),
+                                                rand_day : rand(1,30)
                                             });
                             } else {
                                   result.tabela_kursow.pozycja.forEach(function(entry) {
@@ -278,12 +299,17 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                                 resultmonth: temp1,
                                                 wynik: "Przelicznik" + " " + req.params[3] + " na " + req.params[4],
                                                 date: "Kurs nbp z dnia: " + req.params[0] + "-" + temp1 + "-" + temp2,
+                                                result_text: '',
                                                 result: req.params[5] + req.params[3] + " to " + kurs + req.params[4],
                                                 result1: "show",
                                                 result2: "show",
                                                 contact: "hidden",
                                                 draw1 : draw1,
-                                                draw2 : draw2
+                                                draw2 : draw2,
+                                                rand_amount : rand(10,50),
+                                                rand_year : rand(10,16),
+                                                rand_month : rand(1,12),
+                                                rand_day : rand(1,30)
                                             });
                                       }
                                   }) 
@@ -330,6 +356,7 @@ router.get('/contact', function(req,res){
                     day: "",
                     wynik: "",
                     date: "",
+                    result_text: "",
                     result: "",
                     resultday: "",
                     resultmonth: "",
@@ -398,6 +425,7 @@ router.post('/contact', function (req, res) {
                       amount: "",
                       wynik: "",
                       date: "",
+                      result_text: result_text,
                       result: "Wiadomość wysłana, dziękuje !",
                       resultday: "",
                       resultmonth: "",
@@ -417,7 +445,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
 
   var title = "Przelicznik" + " " + req.params[3] + " na " + req.params[4] + "." +  " " + req.params[3] + " ile to " + req.params[4];
   var description = title + " ? Sprawnie obliczysz to za pomocą kalkulatora EMoney. Obliczenia oparte o kursy NBP. Sprawdź";
-  var result_text = "Drogi użytkowniku, próbujesz przeliczyć walutę z " + req.params[3] + " na " + req.params[4]+"."+" Niestety nie podałeś żadnej kwoty do przeliczenia:( Jeśli chcesz przeliczć inną wartość, niż 1 " + req.params[3]+", na "+req.params[4] + ",wpisz ją proszę w pole wyszukiwania, obok pola oblicz.";                    
+  var result_text = "Drogi użytkowniku, próbujesz przeliczyć walutę z " + req.params[3] + " na " + 
+                    req.params[4]+"."+" Niestety nie podałeś żadnej kwoty do przeliczenia:( Jeśli chcesz przeliczć inną wartość, niż 1 " + 
+                    req.params[3]+", na "+req.params[4] + ",wpisz ją proszę w pole wyszukiwania, obok pola oblicz.";                    
 
   var step1 = req.params[3];
   var step2 = req.params[4];
@@ -470,43 +500,47 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
             console.log("\nWyszukana data: ", newUrl);
           }
 
-          if((req.params[2] == currentDay && currentHour<12) || date.getDay() == 6 || date.getDay() == 0){
-            console.log("Przypadek dzisiejszego dnia");
-            while(newUrl.length !=11 && licznik < 100){
-                  search--;
-                  temp2--;   
-                  licznik++;
-                  console.log("szukamy...",search);     
-                  newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
-            }
+         if(req.params[1] == 1 && (req.params[2] == 1 || req.params[2] == 2 || req.params[2] == 3)){
+              while(newUrl.length !=11 && licznik < 100){
+                    search++;
+                    temp2++;   
+                    licznik++;
+                    console.log("szukamy...",search);     
+                    newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
+              }
+          } else {
+              while(newUrl.length !=11 && licznik < 100){
+                    search--;
+                    temp2--;   
+                    licznik++;
+                    console.log("szukamy...",search);     
+                    newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
+              }
           }
-          else{
-            while(newUrl.length !=11 && licznik < 100){
-                  search++;
-                  temp2++;   
-                  licznik++;
-                  console.log("szukamy...",search);     
-                  newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
-            }
-          }
+
             if(!rx.test(newUrl)){ 
                   newUrl = "a" + newUrl.substring(0,10); 
                   console.log(newUrl); 
             }
 
-            if(temp2>=100){
+          if(temp2>=100){
               temp1++;
-              temp1 = '0' + temp1;
               temp2 = temp2 - 100;
-              temp2 = '0' + temp2;
             }
 
-            if(temp2<=-70){
+          if(temp2<=-70){
               temp1--;
-              tem1 = '0' + temp1;
               temp2 = temp2+100;
-              temp2 = '0' + temp2;
             }
+
+          if(temp1.toString().length < 2){
+            temp1 = '0' + temp1;
+          }
+
+          if(temp2.toString().length < 2){
+            temp2 = '0' + temp2;
+          }
+  
 
   
           console.log("\nWyszukana data: ",newUrl);
@@ -523,8 +557,16 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                    });
 
                   response.on('end', function() {
+
                        parseString(xml, function (err, result) {
-                                  
+                          
+                          result.tabela_kursow.pozycja.forEach(function(entry){
+                              entryTab.push(entry.kod_waluty[0]);
+                          }); 
+
+                          draw1 = entryTab[rand(0,34)];
+                          draw2 = entryTab[rand(0,34)];
+
                             res.render('index', { 
                                   title: title,
                                   description: description,
@@ -540,12 +582,17 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                   resultmonth: "",
                                   wynik:"",
                                   date: "",
+                                  result_text: '',
                                   result: "Brak aktualizacji nbp z danego dnia, aktualizacje dokonywane są w dni robocze ok. godziny 12",
                                   result1: "show",
                                   result2: "hidden",
                                   contact: "hidden",
-                                  draw1 : "",
-                                  draw2 : ""
+                                  draw1 : draw1,
+                                  draw2 : draw2,
+                                  rand_amount : rand(10,50),
+                                  rand_year : rand(10,16),
+                                  rand_month : rand(1,12),
+                                  rand_day : rand(1,30)
                             });    
                        });
                   });
@@ -606,12 +653,17 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                                 resultmonth: temp1,
                                                 wynik: "Przelicznik" + " " + req.params[3] + " na " + req.params[4],
                                                 date: "Kurs nbp z dnia: " + req.params[0] + "-" + temp1 + "-" + temp2,
-                                                result: result_text + '\n\n'+ 1 + req.params[3] + " to " + kurs + req.params[4],
+                                                result_text: result_text,
+                                                result: 1 + req.params[3] + " to " + kurs + req.params[4],
                                                 result1: "show",
                                                 result2: "show",
                                                 contact: "hidden",
                                                 draw1 : draw1,
-                                                draw2 : draw2
+                                                draw2 : draw2,
+                                                rand_amount : rand(10,50),
+                                                rand_year : rand(10,16),
+                                                rand_month : rand(1,12),
+                                                rand_day : rand(1,30)
                                             });
                             } else {
                                   result.tabela_kursow.pozycja.forEach(function(entry) {
@@ -635,12 +687,17 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                                 resultmonth: temp1,
                                                 wynik: "Przelicznik" + " " + req.params[3] + " na " + req.params[4],
                                                 date: "Kurs nbp z dnia: " + req.params[0] + "-" + temp1 + "-" + temp2,
-                                                result: result_text + '\n\n'+ 1 + req.params[3] + " to " + kurs + req.params[4],
+                                                result_text: result_text,
+                                                result: 1 + req.params[3] + " to " + kurs + req.params[4],
                                                 result1: "show",
                                                 result2: "show",
                                                 contact: "hidden" ,
                                                 draw1 : draw1,
-                                                draw2 : draw2
+                                                draw2 : draw2,
+                                                rand_amount : rand(10,50),
+                                                rand_year : rand(10,16),
+                                                rand_month : rand(1,12),
+                                                rand_day : rand(1,30)
                                             });
                                       }
                                   }) 
@@ -650,6 +707,218 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                   });
             });
             }
+        });
+    });
+});
+
+router.get(/^\/przelicznik\/(\w+)\-na-(\w+)\-(\-*(\w*)\.*(\w*))\-(\w+)\-ile-to-(\w+)$/ , function(req,res) {
+
+  var title = "Przelicznik" + " " + req.params[0] + " na " + req.params[1] + "." +  " " + req.params[0] + " ile to " + req.params[1];
+  var description = title + " ? Sprawnie obliczysz to za pomocą kalkulatora EMoney. Obliczenia oparte o kursy NBP. Sprawdź";
+  var result_text = "Drogi użytkowniku, nie wybrałeś daty. Jeśli nie chodziło ci o aktualny kurs proszę wybierz datę.";                    
+
+  var step1 = req.params[0];
+  var step2 = req.params[1];
+  var step3 = req.params[2];
+  var pln = 1;
+  var url = "";
+  var temp1 = currentMonth;
+  var temp2 = currentDay;
+  var entryTab = [];
+
+  if(step3 === ''){
+    step3 = 1;
+    result_text = "Drogi użytkowniku, próbujesz przeliczyć walutę z " + req.params[0] + " na " + req.params[1]+"."+ 
+                  " Niestety nie podałeś żadnej kwoty do przeliczenia:( Jeśli chcesz przeliczć inną wartość, niż 1 "+ 
+                    req.params[0]+", na "+req.params[1] + ",wpisz ją proszę w pole wyszukiwania, obok pola oblicz. "+
+                  "Nie zapomnij również o wyborze odpowiedniej daty.";                  
+  }
+
+  console.log("Pobrane parametry: \n", req.params);
+
+  url = "http://www.nbp.pl/kursy/xml/dir.txt";
+  
+  console.log("\nSzukamy daty w pliku: ", url);
+
+  var getUrl = http.get(url, function(response){
+      var xml = ''
+    
+      response.on('data', function(chunk) {
+          xml += chunk;
+      });
+
+      response.on('end', function(){
+          var rx = /a/g;
+          var array;
+          var sub = "";
+          var newUrl;
+          var licznik=0;
+
+          if(currentMonth.toString().length < 2){
+              currentMonth = '0'+currentMonth;
+          }
+
+          if(currentDay.toString().length < 2){
+              currentDay = '0' + currentDay;
+          }
+          
+          var search = (currentYear-2000).toString() + currentMonth.toString() + currentDay.toString();
+
+          while((array = rx.exec(xml)) !== null){
+              sub += xml.substring(array.index,array.index+11) + "\n";
+          }
+         
+          newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
+
+          if(newUrl.length != 11){
+            console.log("\nUrl o podanej dacie nie istnieje, szukamy najblizszej: ");
+          }
+          else{
+            console.log("\nWyszukana data: ", newUrl);
+          }
+
+            while(newUrl.length !=11 && licznik < 100){
+                  search--;
+                  temp2--;   
+                  licznik++;
+                  console.log("szukamy...",search);     
+                  newUrl = sub.substring(sub.indexOf(search)-5,sub.indexOf(search)+6);
+            }
+          
+          
+            if(!rx.test(newUrl)){ 
+                  newUrl = "a" + newUrl.substring(0,10); 
+                  console.log(newUrl); 
+            }
+
+          if(temp1.toString().length < 2){
+            temp1 = '0' + temp1;
+          }
+
+          if(temp2.toString().length < 2){
+            temp2 = '0' + temp2;
+          }
+  
+
+          if(currentMonth.toString().length < 2){
+            currentMonth = '0' + currentMonth;
+          }
+          
+          if(currentDay.toString().length < 2){
+            currentDay = '0' + currentDay;
+          }
+  
+  
+          console.log("\nWyszukana data: ",newUrl);
+
+          url = "http://www.nbp.pl/kursy/xml/" + newUrl + ".xml";
+          console.log("\nCaly Url : ", url);
+
+            var request = http.get(url, function(response) { 
+                var xml = ''; 
+
+                  response.on('data', function(chunk) { 
+                      xml += chunk; 
+                  });
+
+                  response.on('end', function() {
+
+                        parseString(xml, function (err, result) {
+
+                        result.tabela_kursow.pozycja.forEach(function(entry){
+                              entryTab.push(entry.kod_waluty[0]);
+                        });
+
+
+                          draw1 = entryTab[rand(0,34)];
+                          draw2 = entryTab[rand(0,34)];
+
+                            if(step1 == "PLN"){
+                                 step1 = step3 * pln;
+                                 console.log("\nKrok1 = ilosc * waluta: ", step1, step3, pln);
+                            } 
+                            else { 
+                               result.tabela_kursow.pozycja.forEach(function(entry) {
+                                    if(step1 == entry.kod_waluty[0]){
+                                    step1 = step3 * entry.kurs_sredni[0].replace(",",".");
+                                    console.log("\nKrok1 = ilosc * waluta: ", step1, step3, entry.kod_waluty[0]);
+                                    }   
+                                }) 
+                            }
+
+                            if(step2 == "PLN"){
+                                  step2 = step1 / pln;
+                                  console.log("\nKrok2 = Krok1 / waluta: ", step2.toFixed(2), step1, pln);
+                                  kurs = step2.toFixed(2);
+
+                                   res.render('index', { 
+                                                title: title,
+                                                description: description,
+                                                cash: result.tabela_kursow.pozycja,
+                                                kurs: kurs,
+                                                selected1: req.params[0],
+                                                selected2: req.params[1],
+                                                amount: req.params[2], 
+                                                year: currentYear-2000, 
+                                                month: currentMonth,
+                                                day: currentDay,
+                                                resultday: temp2,
+                                                resultmonth: temp1,
+                                                wynik: "Przelicznik" + " " + req.params[0] + " na " + req.params[1],
+                                                date: "Kurs nbp z dnia: " + currentYear + "-" + temp1 + "-" + temp2,
+                                                result_text: result_text,
+                                                result:step3 + req.params[0] + " to " + kurs + req.params[1],
+                                                result1: "show",
+                                                result2: "show",
+                                                contact: "hidden",
+                                                draw1 : draw1,
+                                                draw2 : draw2,
+                                                rand_amount : rand(10,50),
+                                                rand_year : rand(10,16),
+                                                rand_month : rand(1,12),
+                                                rand_day : rand(1,30)
+                                            });
+                            } else {
+                                  result.tabela_kursow.pozycja.forEach(function(entry) {
+                                      if(step2 == entry.kod_waluty[0]){
+                                        step2 = step1 / entry.kurs_sredni[0].replace(",",".");
+                                        console.log("\nKrok2 = Krok1 / waluta: ", step2.toFixed(2), step1, entry.kurs_sredni[0]);
+                                        kurs = step2.toFixed(2);
+
+                                            res.render('index', { 
+                                                title: title,
+                                                description: description,
+                                                cash: result.tabela_kursow.pozycja,
+                                                kurs: kurs,
+                                                selected1: req.params[0],
+                                                selected2: req.params[1],
+                                                amount: req.params[2],
+                                                year: currentYear-2000, 
+                                                month: currentMonth,
+                                                day: currentDay,
+                                                resultday: temp2,
+                                                resultmonth: temp1,
+                                                wynik: "Przelicznik" + " " + req.params[0] + " na " + req.params[1],
+                                                date: "Kurs nbp z dnia: " + currentYear + "-" + temp1 + "-" + temp2,
+                                                result_text: result_text,
+                                                result: step3 + req.params[0] + " to " + kurs + req.params[1],
+                                                result1: "show",
+                                                result2: "show",
+                                                contact: "hidden" ,
+                                                draw1 : draw1,
+                                                draw2 : draw2,
+                                                rand_amount : rand(10,50),
+                                                rand_year : rand(10,16),
+                                                rand_month : rand(1,12),
+                                                rand_day : rand(1,30)
+                                            });
+                                      }
+                                  }) 
+                              }
+
+                        });
+                  });
+            });
         });
     });
 });

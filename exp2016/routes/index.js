@@ -202,9 +202,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                   draw1 : draw1,
                                   draw2 : draw2,
                                   rand_amount : rand(10,50),
-                                  rand_year : rand(10,16),
-                                  rand_month : rand(1,12),
-                                  rand_day : rand(1,30)
+                                  rand_year : rand(12,16),
+                                  rand_month : '0'+ rand(1,5),
+                                  rand_day : rand(10,30)
                             });    
                        });
                   });
@@ -273,9 +273,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                                 draw1 : draw1,
                                                 draw2 : draw2,
                                                 rand_amount : rand(10,50),
-                                                rand_year : rand(10,16),
-                                                rand_month : rand(1,12),
-                                                rand_day : rand(1,30)
+                                                rand_year : rand(12,16),
+                                                rand_month : '0'+ rand(1,5),
+                                                rand_day : rand(10,30)
                                             });
                             } else {
                                   result.tabela_kursow.pozycja.forEach(function(entry) {
@@ -307,9 +307,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-(\-*(\w+)\.*(\
                                                 draw1 : draw1,
                                                 draw2 : draw2,
                                                 rand_amount : rand(10,50),
-                                                rand_year : rand(10,16),
-                                                rand_month : rand(1,12),
-                                                rand_day : rand(1,30)
+                                                rand_year : rand(12,16),
+                                                rand_month : '0'+ rand(1,5),
+                                                rand_day : rand(10,30)
                                             });
                                       }
                                   }) 
@@ -362,7 +362,13 @@ router.get('/contact', function(req,res){
                     resultmonth: "",
                     result1: "hidden",
                     result2: "hidden",
-                    contact: "contactResult"  
+                    contact: "contactResult",
+                    draw1 : '',
+                    draw2 : '',
+                    rand_amount : '',
+                    rand_year : '',
+                    rand_month : '',
+                    rand_day : ''
                   });
              });
         });
@@ -425,13 +431,19 @@ router.post('/contact', function (req, res) {
                       amount: "",
                       wynik: "",
                       date: "",
-                      result_text: result_text,
+                      result_text: '',
                       result: "Wiadomość wysłana, dziękuje !",
                       resultday: "",
                       resultmonth: "",
                       result1: "hidden",
                       result2: "hidden",
                       contact: "contactResult",
+                      draw1 : '',
+                      draw2 : '',
+                      rand_amount : '',
+                      rand_year : '',
+                      rand_month : '',
+                      rand_day : ''
                     });
                });
           });
@@ -590,9 +602,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                   draw1 : draw1,
                                   draw2 : draw2,
                                   rand_amount : rand(10,50),
-                                  rand_year : rand(10,16),
-                                  rand_month : rand(1,12),
-                                  rand_day : rand(1,30)
+                                  rand_year : rand(12,16),
+                                  rand_month : '0'+ rand(1,5),
+                                  rand_day : rand(10,30)
                             });    
                        });
                   });
@@ -661,9 +673,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                                 draw1 : draw1,
                                                 draw2 : draw2,
                                                 rand_amount : rand(10,50),
-                                                rand_year : rand(10,16),
-                                                rand_month : rand(1,12),
-                                                rand_day : rand(1,30)
+                                                rand_year : rand(12,16),
+                                                rand_month : '0'+ rand(1,5),
+                                                rand_day : rand(10,30)
                                             });
                             } else {
                                   result.tabela_kursow.pozycja.forEach(function(entry) {
@@ -695,9 +707,9 @@ router.get(/^\/przelicznik\/(\w+)\-(\w+)\-(\w+)\/(\w+)\-na-(\w+)\-\-(\w+)\-ile-t
                                                 draw1 : draw1,
                                                 draw2 : draw2,
                                                 rand_amount : rand(10,50),
-                                                rand_year : rand(10,16),
-                                                rand_month : rand(1,12),
-                                                rand_day : rand(1,30)
+                                                rand_year : rand(12,16),
+                                                rand_month : '0'+ rand(1,5),
+                                                rand_day : rand(10,30)
                                             });
                                       }
                                   }) 
@@ -874,9 +886,9 @@ router.get(/^\/przelicznik\/(\w+)\-na-(\w+)\-(\-*(\w*)\.*(\w*))\-(\w+)\-ile-to-(
                                                 draw1 : draw1,
                                                 draw2 : draw2,
                                                 rand_amount : rand(10,50),
-                                                rand_year : rand(10,16),
-                                                rand_month : rand(1,12),
-                                                rand_day : rand(1,30)
+                                                rand_year : rand(12,16),
+                                                rand_month : '0'+ rand(1,5),
+                                                rand_day : rand(10,30)
                                             });
                             } else {
                                   result.tabela_kursow.pozycja.forEach(function(entry) {
@@ -908,9 +920,9 @@ router.get(/^\/przelicznik\/(\w+)\-na-(\w+)\-(\-*(\w*)\.*(\w*))\-(\w+)\-ile-to-(
                                                 draw1 : draw1,
                                                 draw2 : draw2,
                                                 rand_amount : rand(10,50),
-                                                rand_year : rand(10,16),
-                                                rand_month : rand(1,12),
-                                                rand_day : rand(1,30)
+                                                rand_year : rand(12,16),
+                                                rand_month : '0'+ rand(1,5),
+                                                rand_day : rand(10,30)
                                             });
                                       }
                                   }) 

@@ -5,7 +5,7 @@ $(document).ready(function(){
     	temp = document.getElementById("sel1").value; 
     	document.getElementById("sel1").value = document.getElementById("sel2").value;
     	document.getElementById("sel2").value = temp;
-
+      
         var url = "/przelicznik/" + calc.year.value +"-" + calc.month.value + "-" +calc.day.value + "/" + calc.from.value + "-na-" + calc.on.value + "-" + calc.focusedInput.value + "-" + calc.from.value + "-ile-to-" + calc.on.value;
         window.location.href = url;
     }
